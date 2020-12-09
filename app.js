@@ -2,7 +2,7 @@ const express = require('express');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
 const commentRoutes = require('./routes/commentRoutes');
-const dburi = require('./dbURI');
+const dbURI = require('./dbURI');
 // const http = require('http');
 // const fs = require('fs');
 // const _ = require('lodash');
@@ -15,7 +15,6 @@ app.set('view engine', 'ejs');
 
 // Connect to MongoDB using Mongoose and Listening for Requests
 const PORT = process.env.PORT || 3000;
-const dbURI = dburi;
 mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
     .then((result)  => { 
         console.log('connected to DB')
