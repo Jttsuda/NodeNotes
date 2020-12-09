@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%- include('../partials/head.ejs') %>
+</head>
+<body>
+<%- include('../partials/nav.ejs') %>
+
+    <h1>Comment</h1>
+    <h3><%= comment.title %></h3>
+    <h3><%= comment.body %></h3>
+    <a href="" id="delete-btn" data-delete="<%= comment.id %>">Delete</a>
+
+<%- include('../partials/footer.ejs') %>
+
+<!-- Fetch API (Delete) -->
+    <script>
+        const deleteComment = document.getElementById('delete-btn');
+
+        deleteComment.addEventListener('click', (e) => {
+            const url = `/comments/${deleteComment.dataset.delete}`;
+            fetch(url, {
+                method: 'DELETE'
+            })
+            .then((response) => response.json())
+            .then((data) => {
+                window.location.href = data.redirect
+            })
+            .catch((err) => console.log(err));
+        })
+    </script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%- include('../partials/head.ejs') %>
+</head>
+<body>
+<%- include('../partials/nav.ejs') %>
+
+
+    <h1>Comments</h1>
+    <form action="/comments" method="POST">
+        <label for="title">Title</label>
+        <input type="text" name="title">
+        <label for="body">Body</label>
+        <textarea name="body" id="" cols="30" rows="10"></textarea>
+        <input type="submit" value="Add-Comment">
+    </form>
+    <br>
+
+    <% if (comments.length > 0) { %>
+        <% comments.forEach(comment => { %>
+            <a href="/comments/<%= comment.id %>"><h3><%= comment.title %></h3></a>
+            <h3><%= comment.body %></h3>
+        <% }) %>
+    <% } else { %>
+        <h3>Nothing to Display</h3>
+    <% } %>
+
+
+<%- include('../partials/footer.ejs') %>
+</body>
+</html>
