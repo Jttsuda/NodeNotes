@@ -2,9 +2,10 @@ const express = require('express');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
 const commentRoutes = require('./routes/commentRoutes');
-const dbURI = require('./dbURI');
-// const http = require('http');
-// const fs = require('fs');
+const userRoutes = require('./routes/userRoutes');
+const clsfd = require('./classified');
+const cookieParser = require('cookie-parser');
+const { checkUser } = require('./middleware/authMiddleware');
 // const _ = require('lodash');
 
 
@@ -15,7 +16,7 @@ app.set('view engine', 'ejs');
 
 // Connect to MongoDB using Mongoose and Listening for Requests
 const PORT = process.env.PORT || 3000;
-mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(clsfd.dbURI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
     .then((result)  => { 
         console.log('connected to DB')
         app.listen(PORT, 'localhost', () => {
@@ -25,39 +26,26 @@ mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
     .catch((err) => console.log(err));
 
 
-// Middleware & Static Files
+// Middleware/Static Files
 app.use(express.static('public'));//Setting up Static Files
+app.use(express.json());//Auth for req.body
 app.use(express.urlencoded({ extended: true }));//Accepting Form Data
 app.use(morgan('dev'));
+app.use(cookieParser());
+app.use(checkUser);
+// app.get('*', checkUser); // Same as Above
 
 
-// Comment Routes
+// Routes
+app.use(userRoutes);
 app.use('/comments', commentRoutes);
-
-
-// Main Routes
-app.get('/', (req, res) => {
-    const things = [
-        { test: "This" },
-        { test: "is" },
-        { test: "a" },
-        { test: "list" }
-    ]
-    res.render('index', { name: 'Suda', things });
-});
-
-app.get('/about', (req, res) => {
-    res.render('about');
-});
+app.get('/', (req, res) => res.render('home'));
+app.get('/about', (req, res) => res.render('about'));
 
 
 // Redirects
-app.get('/about-us', (req, res) => {
-    res.redirect('/about');
-});
+app.get('/about-us', (req, res) => res.redirect('/about'));
 
 
 // 404 Page
-app.use((req, res) => {
-    res.status(404).render('404');
-});
+app.use((req, res) => res.status(404).render('404'));
