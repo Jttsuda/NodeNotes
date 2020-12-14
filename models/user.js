@@ -14,7 +14,8 @@ const userSchema = new Schema({
         type: String,
         required: [true, 'Enter a Password'],
         minlength: [6, 'Password must be at least 6 characters']
-    }
+    },
+    comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }]
 });
 
 

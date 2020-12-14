@@ -5,7 +5,7 @@ const commentRoutes = require('./routes/commentRoutes');
 const userRoutes = require('./routes/userRoutes');
 const clsfd = require('./classified');
 const cookieParser = require('cookie-parser');
-const { checkUser } = require('./middleware/authMiddleware');
+const { requireAuth, checkUser } = require('./middleware/authMiddleware');
 // const _ = require('lodash');
 
 
@@ -38,7 +38,7 @@ app.use(checkUser);
 
 // Routes
 app.use(userRoutes);
-app.use('/comments', commentRoutes);
+app.use('/comments', requireAuth, commentRoutes);
 app.get('/', (req, res) => res.render('home'));
 app.get('/about', (req, res) => res.render('about'));
 
